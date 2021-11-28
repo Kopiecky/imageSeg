@@ -161,3 +161,21 @@ size_t Image::hight() const
 {
     return m_height;
 }
+
+inline Colors Image::getColor(int x, int y) const
+{
+    return m_colors[y * m_width + x];
+}
+
+inline int Image::bitPadding(int value) const
+{
+    return ((4 - (value * 3) % 4) % 4);
+}
+
+inline void Image::bitShifts(size_t start, int value, unsigned char* array) const
+{
+    array[start]     = value;
+    array[start + 1] = value >> 8;
+    array[start + 2] = value >> 16;
+    array[start + 3] = value >> 24;
+}

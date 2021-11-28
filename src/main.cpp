@@ -3,6 +3,7 @@
 
 #include "image/image.hpp"
 #include "kmeans/kmeans.hpp"
+#include "label/label.hpp"
 
 int main(int argc, char** argv)
 {
@@ -24,12 +25,16 @@ int main(int argc, char** argv)
     std::vector<Colors> colors = im.getColors();
 
     KMeans kmeans(intValue, colors.size());
-    
+
     kmeans.calculate(colors);
 
     im.parseColors(kmeans.clusters);
 
     im.save(argv[3]);
+
+    Label label(im.width(), im.hight());
+    label.calculate(kmeans.clusters);
+    label.save("../data/data.txt");
 
     return 0;
 }
