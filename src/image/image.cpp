@@ -29,7 +29,7 @@ void Image::parseColors(const std::vector<Colors>& colors)
     }
 }
 
-void Image::read(const char* path)
+int Image::read(const char* path)
 {
     std::ifstream f;
     f.open(path, std::ios::in | std::ios::binary);
@@ -46,7 +46,7 @@ void Image::read(const char* path)
     {
         std::cout << "Specified file isn't a bmp image\n";
         f.close();
-        return;
+        return -1;
     }
     unsigned char informationHeader[IMAGE_INFORMATION_HEADER_SIZE];
     f.read(reinterpret_cast<char*>(informationHeader), IMAGE_INFORMATION_HEADER_SIZE);
@@ -79,9 +79,10 @@ void Image::read(const char* path)
 
     f.close();
     std::cout << "File read\n";
+    return 0;
 }
 
-void Image::save(const char* path)
+int Image::save(const char* path)
 {
     std::ofstream f;
 
@@ -90,6 +91,7 @@ void Image::save(const char* path)
     if (!f.is_open())
     {
         std::cout << "Error opening file\n";
+        return -1;
     }
 
     unsigned char bmpPadding[3] = {0, 0, 0};
@@ -100,34 +102,36 @@ void Image::save(const char* path)
 
     unsigned char fileHeader[IMAGE_FILE_HEADER_SIZE];
 
-    fileHeader[0] = 'B';
+    fileHeader[0] = 'B'; // 'BM' w ASCII
     fileHeader[1] = 'M';
 
-    bitShifts(2, fileSize, fileHeader);
+    bitShifts(2, fileSize, fileHeader); //rozmiar pliku
 
-    for (size_t i = 6; i < 14; ++i)
+    for (size_t i = 6; i < 14; ++i) //zarezerwowane bajty
     {
         fileHeader[i] = 0;
     }
 
+    fileHeader[10] = IMAGE_FILE_HEADER_SIZE + IMAGE_INFORMATION_HEADER_SIZE; //offset
+
     unsigned char informationHeader[IMAGE_INFORMATION_HEADER_SIZE];
 
-    informationHeader[0] = IMAGE_INFORMATION_HEADER_SIZE;
+    informationHeader[0] = IMAGE_INFORMATION_HEADER_SIZE; //rozmiar nagłówka 
     informationHeader[1] = 0;
     informationHeader[2] = 0;
     informationHeader[3] = 0;
 
 
-    bitShifts(4, m_width, informationHeader);
-    bitShifts(8, m_height, informationHeader);
+    bitShifts(4, m_width, informationHeader); //szerokość macierzy pikseli
+    bitShifts(8, m_height, informationHeader); //długość macierzy pikseli
 
-    informationHeader[12] = 1;
+    informationHeader[12] = 1; //planes
     informationHeader[13] = 0;
 
-    informationHeader[14] = 24;
+    informationHeader[14] = 24; //ilosc bitow na piksel
     informationHeader[15] = 0;
 
-    for (size_t i = 16; i < 40; ++i)
+    for (size_t i = 16; i < 40; ++i) //zerowa kompresja i podstawowa specyfikacja
     {
         informationHeader[i] = 0;
     }
@@ -137,7 +141,7 @@ void Image::save(const char* path)
 
     for (size_t y = 0; y < m_height; ++y)
     {
-        for (size_t x = 0; x < m_width; ++x)
+        for (size_t x = 0; x < m_width; ++x) //wpisanie kolorów
         {
             unsigned char r = static_cast<unsigned char>(getColor(x, y).r * 255.0f);
             unsigned char g = static_cast<unsigned char>(getColor(x, y).g * 255.0f);
@@ -150,6 +154,7 @@ void Image::save(const char* path)
     }
     f.close();
     std::cout << "File saved\n";
+    return 0;
 }
 
 size_t Image::width() const

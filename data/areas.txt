@@ -1,0 +1,5 @@
+Pole danych obszarów
+0: 481
+1: 36
+2: 68
+3: 40

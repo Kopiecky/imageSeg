@@ -24,8 +24,8 @@ public:
     Image(size_t width, size_t height);
     ~Image();
 
-    void read(const char* path);
-    void save(const char* path);
+    int read(const char* path);
+    int save(const char* path);
     std::vector<Colors> getColors() const;
     void parseColors(const std::vector<Colors>& colors);
     size_t width() const;

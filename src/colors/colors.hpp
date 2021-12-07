@@ -14,6 +14,7 @@ public:
     Colors add(const Colors& other) const;
     Colors divide(float value) const;
     float distance(const Colors& other) const;
+    bool isEqual(const Colors& other) const;
     ~Colors();
 };
 

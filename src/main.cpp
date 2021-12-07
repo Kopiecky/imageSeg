@@ -20,21 +20,24 @@ int main(int argc, char** argv)
     strValue >> intValue;
 
     Image im(0, 0);
-    im.read(argv[2]);
+    int error = im.read(argv[2]);
 
-    std::vector<Colors> colors = im.getColors();
+    if (!error)
+    {
+        std::vector<Colors> colors = im.getColors();
 
-    KMeans kmeans(intValue, colors.size());
+        KMeans kmeans(intValue, colors.size());
 
-    kmeans.calculate(colors);
+        kmeans.calculate(colors);
 
-    im.parseColors(kmeans.clusters);
+        im.parseColors(kmeans.clusters);
 
-    im.save(argv[3]);
+        im.save(argv[3]);
 
-    Label label(im.width(), im.hight());
-    label.calculate(kmeans.clusters);
-    label.save("../data/data.txt");
+        Label label(im.width(), im.hight());
+        label.calculate(kmeans.clusters);
+        label.save("../data/");
+    }
 
     return 0;
 }

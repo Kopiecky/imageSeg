@@ -1,26 +1,21 @@
-RGB = imread("../images/kmeans.bmp");
+
+RGB = imread("../images/kmeans.bmp")
 
 L = zeros([size(RGB,1) size(RGB,2)]);
-
-squeeze(RGB(1, 1, :))'
-
-colors = squeeze(RGB(1,1,:))'; % 1x3
-
-for r = 1:size(L - 5,1);
-    for c = 1:size(L - 5,2);
+colors = squeeze(RGB(1,1,:))';
+for r = 1:size(L,1);
+    for c = 1:size(L,2);
         
-        color =  squeeze(RGB(r,c,:))'; %1x3
+        color =  squeeze(RGB(r,c,:))';
         
-        matches = ismember(colors, color); %1x3
-        matches = matches(:,1) .* matches(:,2) .* matches(:,3); % 1x1
-        l = find(matches, 1); %bool
+        matches = ismember(colors, color);
+        matches = matches(:,1) .* matches(:,2) .* matches(:,3);
+        l = find(matches, 1);
         if l
-            L(r,c) = l; %out = size_t
+            L(r,c) = l;
         else
-            colors = [colors ; color]; %dodanie do colors wektora color
-            L(r,c) = size(colors,1); %out = colors.size();
+            colors = [colors ; color]; %#ok<AGROW>
+            L(r,c) = size(colors,1);
         end
     end
 end
-
-

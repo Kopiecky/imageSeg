@@ -32,3 +32,15 @@ float Colors::distance(const Colors& other) const
 {
     return (fabs(r - other.r) + fabs(g - other.g) + fabs(b - other.b));
 }
+
+bool Colors::isEqual(const Colors& other) const
+{
+    if (r == other.r && g == other.g && b == other.b)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
