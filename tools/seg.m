@@ -1,8 +1,3 @@
-% Written by Pratik Jain
-% Subscribe me on YouTube
-% https://www.youtube.com/PratikJainTutorials
-
-
 clc;
 clear;
 close all;
